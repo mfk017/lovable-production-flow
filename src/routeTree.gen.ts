@@ -18,6 +18,9 @@ import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppOrdersIndexRouteImport } from './routes/_app.orders.index'
 import { Route as AppOrdersNewRouteImport } from './routes/_app.orders.new'
 import { Route as AppOrdersIdRouteImport } from './routes/_app.orders.$id'
+import { Route as AppAdminUsersRouteImport } from './routes/_app.admin.users'
+import { Route as AppAdminCategoriesRouteImport } from './routes/_app.admin.categories'
+import { Route as AppAdminBranchesRouteImport } from './routes/_app.admin.branches'
 
 const PendingApprovalRoute = PendingApprovalRouteImport.update({
   id: '/pending-approval',
@@ -63,6 +66,21 @@ const AppOrdersIdRoute = AppOrdersIdRouteImport.update({
   path: '/orders/$id',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAdminUsersRoute = AppAdminUsersRouteImport.update({
+  id: '/admin/users',
+  path: '/admin/users',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdminCategoriesRoute = AppAdminCategoriesRouteImport.update({
+  id: '/admin/categories',
+  path: '/admin/categories',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdminBranchesRoute = AppAdminBranchesRouteImport.update({
+  id: '/admin/branches',
+  path: '/admin/branches',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -70,6 +88,9 @@ export interface FileRoutesByFullPath {
   '/pending-approval': typeof PendingApprovalRoute
   '/dashboard': typeof AppDashboardRoute
   '/invoices': typeof AppInvoicesRoute
+  '/admin/branches': typeof AppAdminBranchesRoute
+  '/admin/categories': typeof AppAdminCategoriesRoute
+  '/admin/users': typeof AppAdminUsersRoute
   '/orders/$id': typeof AppOrdersIdRoute
   '/orders/new': typeof AppOrdersNewRoute
   '/orders/': typeof AppOrdersIndexRoute
@@ -80,6 +101,9 @@ export interface FileRoutesByTo {
   '/pending-approval': typeof PendingApprovalRoute
   '/dashboard': typeof AppDashboardRoute
   '/invoices': typeof AppInvoicesRoute
+  '/admin/branches': typeof AppAdminBranchesRoute
+  '/admin/categories': typeof AppAdminCategoriesRoute
+  '/admin/users': typeof AppAdminUsersRoute
   '/orders/$id': typeof AppOrdersIdRoute
   '/orders/new': typeof AppOrdersNewRoute
   '/orders': typeof AppOrdersIndexRoute
@@ -92,6 +116,9 @@ export interface FileRoutesById {
   '/pending-approval': typeof PendingApprovalRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/invoices': typeof AppInvoicesRoute
+  '/_app/admin/branches': typeof AppAdminBranchesRoute
+  '/_app/admin/categories': typeof AppAdminCategoriesRoute
+  '/_app/admin/users': typeof AppAdminUsersRoute
   '/_app/orders/$id': typeof AppOrdersIdRoute
   '/_app/orders/new': typeof AppOrdersNewRoute
   '/_app/orders/': typeof AppOrdersIndexRoute
@@ -104,6 +131,9 @@ export interface FileRouteTypes {
     | '/pending-approval'
     | '/dashboard'
     | '/invoices'
+    | '/admin/branches'
+    | '/admin/categories'
+    | '/admin/users'
     | '/orders/$id'
     | '/orders/new'
     | '/orders/'
@@ -114,6 +144,9 @@ export interface FileRouteTypes {
     | '/pending-approval'
     | '/dashboard'
     | '/invoices'
+    | '/admin/branches'
+    | '/admin/categories'
+    | '/admin/users'
     | '/orders/$id'
     | '/orders/new'
     | '/orders'
@@ -125,6 +158,9 @@ export interface FileRouteTypes {
     | '/pending-approval'
     | '/_app/dashboard'
     | '/_app/invoices'
+    | '/_app/admin/branches'
+    | '/_app/admin/categories'
+    | '/_app/admin/users'
     | '/_app/orders/$id'
     | '/_app/orders/new'
     | '/_app/orders/'
@@ -202,12 +238,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppOrdersIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/admin/users': {
+      id: '/_app/admin/users'
+      path: '/admin/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AppAdminUsersRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/admin/categories': {
+      id: '/_app/admin/categories'
+      path: '/admin/categories'
+      fullPath: '/admin/categories'
+      preLoaderRoute: typeof AppAdminCategoriesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/admin/branches': {
+      id: '/_app/admin/branches'
+      path: '/admin/branches'
+      fullPath: '/admin/branches'
+      preLoaderRoute: typeof AppAdminBranchesRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
   AppInvoicesRoute: typeof AppInvoicesRoute
+  AppAdminBranchesRoute: typeof AppAdminBranchesRoute
+  AppAdminCategoriesRoute: typeof AppAdminCategoriesRoute
+  AppAdminUsersRoute: typeof AppAdminUsersRoute
   AppOrdersIdRoute: typeof AppOrdersIdRoute
   AppOrdersNewRoute: typeof AppOrdersNewRoute
   AppOrdersIndexRoute: typeof AppOrdersIndexRoute
@@ -216,6 +276,9 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
   AppInvoicesRoute: AppInvoicesRoute,
+  AppAdminBranchesRoute: AppAdminBranchesRoute,
+  AppAdminCategoriesRoute: AppAdminCategoriesRoute,
+  AppAdminUsersRoute: AppAdminUsersRoute,
   AppOrdersIdRoute: AppOrdersIdRoute,
   AppOrdersNewRoute: AppOrdersNewRoute,
   AppOrdersIndexRoute: AppOrdersIndexRoute,

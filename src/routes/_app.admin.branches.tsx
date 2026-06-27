@@ -39,7 +39,7 @@ function AdminBranches() {
         </form>
         <div className="space-y-2">
           {list.data?.map((b: any) => (
-            <EditableRow key={b.id} item={b} placeholder={t("branch_name")} onSave={async (n) => { await upsert({ data: { id: b.id, name: n } }); refresh(); toast.success(t("success")); }} onDelete={async () => { if (!confirm(t("confirm_delete"))) return; await del({ data: { id: b.id } }); refresh(); }} />
+            <EditableRow key={b.id} item={b} placeholder={t("branch_name")} onSave={async (n: string) => { await upsert({ data: { id: b.id, name: n } }); refresh(); toast.success(t("success")); }} onDelete={async () => { if (!confirm(t("confirm_delete"))) return; await del({ data: { id: b.id } }); refresh(); }} />
           ))}
         </div>
       </CardContent>

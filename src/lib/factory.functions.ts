@@ -293,7 +293,7 @@ export const startCurrentAssignment = createServerFn({ method: "POST" })
       .from("order_assignments")
       .select("*")
       .eq("order_id", data.orderId)
-      .eq("stage_id", order.current_stage_id)
+      .eq("stage_id", order.current_stage_id!)
       .in("status", ["pending", "in_progress"])
       .order("created_at", { ascending: false })
       .limit(1)
@@ -333,7 +333,7 @@ export const advanceStage = createServerFn({ method: "POST" })
     const { data: curStage } = await supabaseAdmin
       .from("workflow_stages")
       .select("*")
-      .eq("id", order.current_stage_id)
+      .eq("id", order.current_stage_id!)
       .maybeSingle();
     if (!curStage) throw new Error("Stage missing");
 
@@ -341,7 +341,7 @@ export const advanceStage = createServerFn({ method: "POST" })
       .from("order_assignments")
       .select("*")
       .eq("order_id", data.orderId)
-      .eq("stage_id", order.current_stage_id)
+      .eq("stage_id", order.current_stage_id!)
       .in("status", ["pending", "in_progress"])
       .order("created_at", { ascending: false })
       .limit(1)
@@ -441,7 +441,7 @@ export const qualityReturn = createServerFn({ method: "POST" })
       .from("order_assignments")
       .update({ status: "returned", finished_at: new Date().toISOString() })
       .eq("order_id", data.orderId)
-      .eq("stage_id", order.current_stage_id)
+      .eq("stage_id", order.current_stage_id!)
       .in("status", ["pending", "in_progress"]);
 
     // Open assignment on returnTo stage
@@ -469,7 +469,7 @@ export const qualityReturn = createServerFn({ method: "POST" })
       order_id: data.orderId,
       actor_id: context.userId,
       action: "quality_return",
-      from_stage_id: order.current_stage_id,
+      from_stage_id: order.current_stage_id!,
       to_stage_id: data.returnToStageId,
       to_user_id: data.responsibleUserId ?? null,
       notes: data.reason,

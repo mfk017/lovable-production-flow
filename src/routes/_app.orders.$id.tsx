@@ -157,7 +157,7 @@ function OrderDetail() {
               </Button>
             )}
             {!canQualityAct && isMyTask && (
-              <FinishDialog onFinish={async (assigneeId, notes) => {
+              <FinishDialog onFinish={async (assigneeId: string, notes: string) => {
                 await advanceFn({ data: { orderId: id, nextAssigneeId: assigneeId || undefined, notes } });
                 refresh();
                 toast.success(t("success"));
@@ -168,7 +168,7 @@ function OrderDetail() {
                 <Button onClick={async () => { await advanceFn({ data: { orderId: id } }); refresh(); toast.success(t("success")); }}>
                   <CheckCircle2 className="h-4 w-4 me-1" />{t("quality_pass")}
                 </Button>
-                <QualityReturnDialog stages={stages.data ?? []} fetchWorkers={fetchWorkers} onSubmit={async (returnTo, who, reason) => {
+                <QualityReturnDialog stages={stages.data ?? []} fetchWorkers={fetchWorkers} onSubmit={async (returnTo: string, who: string, reason: string) => {
                   await qrFn({ data: { orderId: id, returnToStageId: returnTo, responsibleUserId: who || undefined, reason } });
                   refresh();
                   toast.success(t("success"));

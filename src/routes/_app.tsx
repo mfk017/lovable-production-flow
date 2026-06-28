@@ -4,7 +4,7 @@ import { useAuth } from "@/lib/auth";
 import { useI18n } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, ClipboardList, Plus, Receipt, Users, Tag, Building2, LogOut, Languages, Loader2 } from "lucide-react";
+import { LayoutDashboard, ClipboardList, Plus, Receipt, Users, Tag, Building2, LogOut, Languages, Loader2, ShieldAlert } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app")({

@@ -216,7 +216,21 @@ const dict = {
     stages_in_order: "Stages in order",
     next_stage: "Next stage",
     confirm_delete: "Confirm delete?",
+    forgot_password: "Forgot password?",
+    send_reset_link: "Send reset link",
+    reset_link_sent: "Reset link sent to your email",
+    back_to_signin: "Back to sign in",
+    new_password: "New password",
+    confirm_new_password: "Confirm password",
+    update_password: "Update password",
+    password_updated: "Password updated",
+    passwords_no_match: "Passwords do not match",
+    invalid_reset_link: "Invalid or expired link",
+    password_reset_audit: "Password reset audit log",
+    event_requested: "Link requested",
+    event_completed: "Password changed",
   },
+
 } as const;
 
 type Key = keyof (typeof dict)["ar"];

@@ -49,6 +49,16 @@ function AuthPage() {
         if (error) throw error;
         toast.success(t("success"));
         navigate({ to: "/pending-approval" });
+      } else if (mode === "forgot") {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/reset-password`,
+        });
+        if (error) throw error;
+        try {
+          await logEvent({ data: { email, event: "requested" } });
+        } catch {}
+        toast.success(t("reset_link_sent"));
+        setMode("signin");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
@@ -60,6 +70,7 @@ function AuthPage() {
       setBusy(false);
     }
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-secondary/30 to-accent/20 p-4">

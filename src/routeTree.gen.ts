@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PendingApprovalRouteImport } from './routes/pending-approval'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppRouteImport } from './routes/_app'
@@ -19,9 +20,15 @@ import { Route as AppOrdersIndexRouteImport } from './routes/_app.orders.index'
 import { Route as AppOrdersNewRouteImport } from './routes/_app.orders.new'
 import { Route as AppOrdersIdRouteImport } from './routes/_app.orders.$id'
 import { Route as AppAdminUsersRouteImport } from './routes/_app.admin.users'
+import { Route as AppAdminPasswordAuditRouteImport } from './routes/_app.admin.password-audit'
 import { Route as AppAdminCategoriesRouteImport } from './routes/_app.admin.categories'
 import { Route as AppAdminBranchesRouteImport } from './routes/_app.admin.branches'
 
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PendingApprovalRoute = PendingApprovalRouteImport.update({
   id: '/pending-approval',
   path: '/pending-approval',
@@ -71,6 +78,11 @@ const AppAdminUsersRoute = AppAdminUsersRouteImport.update({
   path: '/admin/users',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAdminPasswordAuditRoute = AppAdminPasswordAuditRouteImport.update({
+  id: '/admin/password-audit',
+  path: '/admin/password-audit',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAdminCategoriesRoute = AppAdminCategoriesRouteImport.update({
   id: '/admin/categories',
   path: '/admin/categories',
@@ -86,10 +98,12 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/pending-approval': typeof PendingApprovalRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/dashboard': typeof AppDashboardRoute
   '/invoices': typeof AppInvoicesRoute
   '/admin/branches': typeof AppAdminBranchesRoute
   '/admin/categories': typeof AppAdminCategoriesRoute
+  '/admin/password-audit': typeof AppAdminPasswordAuditRoute
   '/admin/users': typeof AppAdminUsersRoute
   '/orders/$id': typeof AppOrdersIdRoute
   '/orders/new': typeof AppOrdersNewRoute
@@ -99,10 +113,12 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/pending-approval': typeof PendingApprovalRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/dashboard': typeof AppDashboardRoute
   '/invoices': typeof AppInvoicesRoute
   '/admin/branches': typeof AppAdminBranchesRoute
   '/admin/categories': typeof AppAdminCategoriesRoute
+  '/admin/password-audit': typeof AppAdminPasswordAuditRoute
   '/admin/users': typeof AppAdminUsersRoute
   '/orders/$id': typeof AppOrdersIdRoute
   '/orders/new': typeof AppOrdersNewRoute
@@ -114,10 +130,12 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
   '/pending-approval': typeof PendingApprovalRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/invoices': typeof AppInvoicesRoute
   '/_app/admin/branches': typeof AppAdminBranchesRoute
   '/_app/admin/categories': typeof AppAdminCategoriesRoute
+  '/_app/admin/password-audit': typeof AppAdminPasswordAuditRoute
   '/_app/admin/users': typeof AppAdminUsersRoute
   '/_app/orders/$id': typeof AppOrdersIdRoute
   '/_app/orders/new': typeof AppOrdersNewRoute
@@ -129,10 +147,12 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/pending-approval'
+    | '/reset-password'
     | '/dashboard'
     | '/invoices'
     | '/admin/branches'
     | '/admin/categories'
+    | '/admin/password-audit'
     | '/admin/users'
     | '/orders/$id'
     | '/orders/new'
@@ -142,10 +162,12 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/pending-approval'
+    | '/reset-password'
     | '/dashboard'
     | '/invoices'
     | '/admin/branches'
     | '/admin/categories'
+    | '/admin/password-audit'
     | '/admin/users'
     | '/orders/$id'
     | '/orders/new'
@@ -156,10 +178,12 @@ export interface FileRouteTypes {
     | '/_app'
     | '/auth'
     | '/pending-approval'
+    | '/reset-password'
     | '/_app/dashboard'
     | '/_app/invoices'
     | '/_app/admin/branches'
     | '/_app/admin/categories'
+    | '/_app/admin/password-audit'
     | '/_app/admin/users'
     | '/_app/orders/$id'
     | '/_app/orders/new'
@@ -171,10 +195,18 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   AuthRoute: typeof AuthRoute
   PendingApprovalRoute: typeof PendingApprovalRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pending-approval': {
       id: '/pending-approval'
       path: '/pending-approval'
@@ -245,6 +277,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAdminUsersRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/admin/password-audit': {
+      id: '/_app/admin/password-audit'
+      path: '/admin/password-audit'
+      fullPath: '/admin/password-audit'
+      preLoaderRoute: typeof AppAdminPasswordAuditRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/admin/categories': {
       id: '/_app/admin/categories'
       path: '/admin/categories'
@@ -267,6 +306,7 @@ interface AppRouteChildren {
   AppInvoicesRoute: typeof AppInvoicesRoute
   AppAdminBranchesRoute: typeof AppAdminBranchesRoute
   AppAdminCategoriesRoute: typeof AppAdminCategoriesRoute
+  AppAdminPasswordAuditRoute: typeof AppAdminPasswordAuditRoute
   AppAdminUsersRoute: typeof AppAdminUsersRoute
   AppOrdersIdRoute: typeof AppOrdersIdRoute
   AppOrdersNewRoute: typeof AppOrdersNewRoute
@@ -278,6 +318,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppInvoicesRoute: AppInvoicesRoute,
   AppAdminBranchesRoute: AppAdminBranchesRoute,
   AppAdminCategoriesRoute: AppAdminCategoriesRoute,
+  AppAdminPasswordAuditRoute: AppAdminPasswordAuditRoute,
   AppAdminUsersRoute: AppAdminUsersRoute,
   AppOrdersIdRoute: AppOrdersIdRoute,
   AppOrdersNewRoute: AppOrdersNewRoute,
@@ -291,6 +332,7 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   AuthRoute: AuthRoute,
   PendingApprovalRoute: PendingApprovalRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

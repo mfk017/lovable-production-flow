@@ -250,6 +250,36 @@ export type Database = {
           },
         ]
       }
+      password_reset_audit: {
+        Row: {
+          created_at: string
+          email: string
+          event: string
+          id: string
+          ip: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          event: string
+          id?: string
+          ip?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          event?: string
+          id?: string
+          ip?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       product_categories: {
         Row: {
           active: boolean

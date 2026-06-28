@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useI18n } from "@/lib/i18n";
@@ -8,6 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
+import { useServerFn } from "@tanstack/react-start";
+import { logPasswordResetEvent } from "@/lib/password-reset.functions";
+
 
 export const Route = createFileRoute("/auth")({
   component: AuthPage,
@@ -17,12 +20,14 @@ function AuthPage() {
   const { t, lang, setLang } = useI18n();
   const { user, loading } = useAuth();
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const logEvent = useServerFn(logPasswordResetEvent);
+  const [mode, setMode] = useState<"signin" | "signup" | "forgot">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
   const [busy, setBusy] = useState(false);
+
 
   useEffect(() => {
     if (!loading && user) navigate({ to: "/dashboard" });
@@ -44,6 +49,16 @@ function AuthPage() {
         if (error) throw error;
         toast.success(t("success"));
         navigate({ to: "/pending-approval" });
+      } else if (mode === "forgot") {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/reset-password`,
+        });
+        if (error) throw error;
+        try {
+          await logEvent({ data: { email, event: "requested" } });
+        } catch {}
+        toast.success(t("reset_link_sent"));
+        setMode("signin");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
@@ -56,6 +71,7 @@ function AuthPage() {
     }
   };
 
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-secondary/30 to-accent/20 p-4">
       <div className="w-full max-w-md">
@@ -67,7 +83,9 @@ function AuthPage() {
         </div>
         <Card className="border-border/60 shadow-lg">
           <CardHeader>
-            <CardTitle>{mode === "signin" ? t("welcome_back") : t("create_account")}</CardTitle>
+            <CardTitle>
+              {mode === "signin" ? t("welcome_back") : mode === "signup" ? t("create_account") : t("forgot_password")}
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={submit} className="space-y-4">
@@ -87,22 +105,48 @@ function AuthPage() {
                 <Label htmlFor="em">{t("email")}</Label>
                 <Input id="em" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
               </div>
-              <div>
-                <Label htmlFor="pw">{t("password")}</Label>
-                <Input id="pw" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
-              </div>
+              {mode !== "forgot" && (
+                <div>
+                  <Label htmlFor="pw">{t("password")}</Label>
+                  <Input id="pw" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
+                </div>
+              )}
               <Button type="submit" disabled={busy} className="w-full">
-                {busy ? t("loading") : mode === "signin" ? t("sign_in") : t("sign_up")}
+                {busy
+                  ? t("loading")
+                  : mode === "signin"
+                  ? t("sign_in")
+                  : mode === "signup"
+                  ? t("sign_up")
+                  : t("send_reset_link")}
               </Button>
-              <p className="text-sm text-center text-muted-foreground">
-                {mode === "signin" ? t("no_account") : t("have_account")}{" "}
-                <button type="button" onClick={() => setMode(mode === "signin" ? "signup" : "signin")} className="text-primary font-medium underline">
-                  {mode === "signin" ? t("sign_up") : t("sign_in")}
+              {mode === "signin" && (
+                <button
+                  type="button"
+                  onClick={() => setMode("forgot")}
+                  className="text-sm text-primary hover:underline w-full text-center"
+                >
+                  {t("forgot_password")}
                 </button>
+              )}
+              <p className="text-sm text-center text-muted-foreground">
+                {mode === "forgot" ? (
+                  <button type="button" onClick={() => setMode("signin")} className="text-primary font-medium underline">
+                    {t("back_to_signin")}
+                  </button>
+                ) : (
+                  <>
+                    {mode === "signin" ? t("no_account") : t("have_account")}{" "}
+                    <button type="button" onClick={() => setMode(mode === "signin" ? "signup" : "signin")} className="text-primary font-medium underline">
+                      {mode === "signin" ? t("sign_up") : t("sign_in")}
+                    </button>
+                  </>
+                )}
               </p>
             </form>
           </CardContent>
         </Card>
+
       </div>
     </div>
   );

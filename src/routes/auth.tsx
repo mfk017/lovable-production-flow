@@ -83,7 +83,9 @@ function AuthPage() {
         </div>
         <Card className="border-border/60 shadow-lg">
           <CardHeader>
-            <CardTitle>{mode === "signin" ? t("welcome_back") : t("create_account")}</CardTitle>
+            <CardTitle>
+              {mode === "signin" ? t("welcome_back") : mode === "signup" ? t("create_account") : t("forgot_password")}
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={submit} className="space-y-4">
@@ -103,22 +105,48 @@ function AuthPage() {
                 <Label htmlFor="em">{t("email")}</Label>
                 <Input id="em" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
               </div>
-              <div>
-                <Label htmlFor="pw">{t("password")}</Label>
-                <Input id="pw" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
-              </div>
+              {mode !== "forgot" && (
+                <div>
+                  <Label htmlFor="pw">{t("password")}</Label>
+                  <Input id="pw" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
+                </div>
+              )}
               <Button type="submit" disabled={busy} className="w-full">
-                {busy ? t("loading") : mode === "signin" ? t("sign_in") : t("sign_up")}
+                {busy
+                  ? t("loading")
+                  : mode === "signin"
+                  ? t("sign_in")
+                  : mode === "signup"
+                  ? t("sign_up")
+                  : t("send_reset_link")}
               </Button>
-              <p className="text-sm text-center text-muted-foreground">
-                {mode === "signin" ? t("no_account") : t("have_account")}{" "}
-                <button type="button" onClick={() => setMode(mode === "signin" ? "signup" : "signin")} className="text-primary font-medium underline">
-                  {mode === "signin" ? t("sign_up") : t("sign_in")}
+              {mode === "signin" && (
+                <button
+                  type="button"
+                  onClick={() => setMode("forgot")}
+                  className="text-sm text-primary hover:underline w-full text-center"
+                >
+                  {t("forgot_password")}
                 </button>
+              )}
+              <p className="text-sm text-center text-muted-foreground">
+                {mode === "forgot" ? (
+                  <button type="button" onClick={() => setMode("signin")} className="text-primary font-medium underline">
+                    {t("back_to_signin")}
+                  </button>
+                ) : (
+                  <>
+                    {mode === "signin" ? t("no_account") : t("have_account")}{" "}
+                    <button type="button" onClick={() => setMode(mode === "signin" ? "signup" : "signin")} className="text-primary font-medium underline">
+                      {mode === "signin" ? t("sign_up") : t("sign_in")}
+                    </button>
+                  </>
+                )}
               </p>
             </form>
           </CardContent>
         </Card>
+
       </div>
     </div>
   );

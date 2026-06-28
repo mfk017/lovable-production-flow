@@ -39,7 +39,9 @@ function AppLayout() {
       { to: "/admin/users", label: t("users"), icon: Users },
       { to: "/admin/categories", label: t("categories"), icon: Tag },
       { to: "/admin/branches", label: t("branches"), icon: Building2 },
+      { to: "/admin/password-audit", label: t("password_reset_audit"), icon: ShieldAlert },
     ] : []),
+
   ] as const;
 
   const signOut = async () => { await supabase.auth.signOut(); navigate({ to: "/auth" }); };
